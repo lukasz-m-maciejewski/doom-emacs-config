@@ -1,0 +1,217 @@
+#+TITLE: Config
+
+* Default config template
+#+BEGIN_SRC
+;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
+#+END_SRC
+
+Place your private configuration here! Remember, you do not need to run 'doom
+sync' after modifying this file!
+
+Some functionality uses this to identify you, e.g. GPG configuration, email
+clients, file templates and snippets.
+
+#+BEGIN_SRC emacs-lisp
+(setq user-full-name "Lukasz Maciejewski"
+      user-mail-address "lukasz.m.maciejewski@pm.me")
+#+END_SRC
+Doom exposes five (optional) variables for controlling fonts in Doom. Here
+are the three important ones:
+
++ `doom-font'
++ `doom-variable-pitch-font'
++ `doom-big-font' -- used for `doom-big-font-mode'; use this for
+  presentations or streaming.
+
+They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
+font string. You generally only need these two:
+
+#+BEGIN_SRC emacs-lisp
+(setq doom-font (font-spec :family "Iosevka Term" :size 16))
+#+END_SRC
+
+There are two ways to load a theme. Both assume the theme is installed and
+available. You can either set `doom-theme' or manually load a theme with the
+`load-theme' function. This is the default:
+
+#+BEGIN_SRC emacs-lisp
+(setq doom-theme 'doom-solarized-dark)
+#+END_SRC
+
+If you use `org' and don't want your org files in the default location below,
+change `org-directory'. It must be set before org loads!
+
+#+BEGIN_SRC emacs-lisp
+(setq org-directory "~/org/")
+#+END_SRC
+
+This determines the style of line numbers in effect. If set to `nil', line
+numbers are disabled. For relative line numbers, set this to `relative'.
+#+BEGIN_SRC emacs-lisp
+(setq display-line-numbers-type 'relative)
+#+END_SRC
+
+ Here are some additional functions/macros that could help you configure Doom:
+
+ - `load!' for loading external *.el files relative to this one
+ - `use-package' for configuring packages
+ - `after!' for running code after a package has loaded
+ - `add-load-path!' for adding directories to the `load-path', relative to
+   this file. Emacs searches the `load-path' when you load packages with
+   `require' or `use-package'.
+ - `map!' for binding new keys
+
+To get information about any of these functions/macros, move the cursor over
+the highlighted symbol at press 'K' (non-evil users must press 'C-c g k').
+This will open documentation for it, including demos of how they are used.
+
+You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
+they are implemented.
+#+END_SRC
+
+#+begin_src emacs-lisp
+(defmacro svarog/defhook (name arglist hooks docstring &rest body)
+  "Define a function called NAME and add it to a hook.
+ARGLIST is as in `defun'. HOOKS is a list of hooks to which to
+add the function, or just a single hook. DOCSTRING and BODY are
+as in `defun'."
+  (declare (indent 2)
+           (doc-string 4))
+  (unless (listp hooks)
+    (setq hooks (list hooks)))
+  (dolist (hook hooks)
+    (unless (string-match-p "-\\(hook\\|functions\\)$" (symbol-name hook))
+      (error "Symbol `%S' is not a hook" hook)))
+  (unless (stringp docstring)
+    (error "Svarog: no docstring provided for `svarog/defhook'"))
+  (let ((hooks-str (format "`%S'" (car hooks))))
+    (dolist (hook (cdr hooks))
+      (setq hooks-str (format "%s\nand `%S'" hooks-str hook)))
+    `(progn
+       (defun ,name ,arglist
+         ,(format "%s\n\nThis function is for use in %s."
+                  docstring hooks-str)
+         ,@body)
+       (dolist (hook ',hooks)
+         (add-hook hook ',name)))))
+#+end_src
+
+* clang-format
+
+#+begin_src emacs-lisp
+(use-package clang-format
+  :bind (("C-c f"   . clang-format-buffer)
+         ("C-c C-f" . clang-format-buffer)))
+#+end_src
+
+* Bazel
+#+begin_src emacs-lisp
+(use-package bazel-mode
+  :demand t
+  :config
+  (add-to-list 'auto-mode-alist '("/BUILD\\(\\..*\\)?\\'" . bazel-mode))
+  (add-to-list 'auto-mode-alist '("/WORKSPACE\\'" . bazel-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(BUILD\\|WORKSPACE\\|bzl\\)\\'" . bazel-mode))
+  (svarog/defhook autoformat-on-save () bazel-mode-hook "Autoformat on save."
+                  (add-hook 'before-save-hook #'bazel-format nil t)))
+#+END_SRC
+* Protobuf
+#+BEGIN_SRC emacs-lisp
+(defconst local-protobuf-style
+  '((c-basic-offset . 4)
+    (indent-tabs-mode . nil)))
+
+(use-package protobuf-mode
+  :config
+  (svarog/defhook svarog/set-proto-style () protobuf-mode-hook "Set protobuf style."
+                  (c-add-style "local-protobuf-style" local-protobuf-style t)))
+#+END_SRC
+
+* Projectile
+#+begin_src emacs-lisp
+(setq projectile-project-search-path '("~/code/"))
+#+end_src
+* lsp config
+#+BEGIN_SRC emacs-lisp
+(setq lsp-enable-file-watchers nil)
+;;(setq lsp-file-watch-threshold 150000)
+#+END_SRC
+
+* ligatures
+#+BEGIN_SRC emacs-lisp
+(use-package composite
+  :init
+  (defvar composition-ligature-table (make-char-table nil))
+  :hook
+  (((prog-mode conf-mode nxml-mode markdown-mode help-mode)
+    . (lambda () (setq-local composition-function-table composition-ligature-table))))
+    :config
+  ;; support ligatures, some toned down to prevent hang
+  (when (version<= "27.0" emacs-version)
+    (let ((alist
+           '((33 . ".\\(?:\\(==\\|[!=]\\)[!=]?\\)")
+             (35 . ".\\(?:\\(###?\\|_(\\|[(:=?[_{]\\)[#(:=?[_{]?\\)")
+             (36 . ".\\(?:\\(>\\)>?\\)")
+             (37 . ".\\(?:\\(%\\)%?\\)")
+             (38 . ".\\(?:\\(&\\)&?\\)")
+             (42 . ".\\(?:\\(\\*\\*\\|[*>]\\)[*>]?\\)")
+             ;; (42 . ".\\(?:\\(\\*\\*\\|[*/>]\\).?\\)")
+             (43 . ".\\(?:\\([>]\\)>?\\)")
+             ;; (43 . ".\\(?:\\(\\+\\+\\|[+>]\\).?\\)")
+             (45 . ".\\(?:\\(-[->]\\|<<\\|>>\\|[-<>|~]\\)[-<>|~]?\\)")
+             ;; (46 . ".\\(?:\\(\\.[.<]\\|[-.=]\\)[-.<=]?\\)")
+             (46 . ".\\(?:\\(\\.<\\|[-=]\\)[-<=]?\\)")
+             (47 . ".\\(?:\\(//\\|==\\|[=>]\\)[/=>]?\\)")
+             ;; (47 . ".\\(?:\\(//\\|==\\|[*/=>]\\).?\\)")
+             (48 . ".\\(?:\\(x[a-fA-F0-9]\\).?\\)")
+             (58 . ".\\(?:\\(::\\|[:<=>]\\)[:<=>]?\\)")
+             (59 . ".\\(?:\\(;\\);?\\)")
+             (60 . ".\\(?:\\(!--\\|\\$>\\|\\*>\\|\\+>\\|-[-<>|]\\|/>\\|<[-<=]\\|=[<>|]\\|==>?\\||>\\||||?\\|~[>~]\\|[$*+/:<=>|~-]\\)[$*+/:<=>|~-]?\\)")
+             (61 . ".\\(?:\\(!=\\|/=\\|:=\\|<<\\|=[=>]\\|>>\\|[=>]\\)[=<>]?\\)")
+             (62 . ".\\(?:\\(->\\|=>\\|>[-=>]\\|[-:=>]\\)[-:=>]?\\)")
+             (63 . ".\\(?:\\([.:=?]\\)[.:=?]?\\)")
+             (91 . ".\\(?:\\(|\\)[]|]?\\)")
+             ;; (92 . ".\\(?:\\([\\n]\\)[\\]?\\)")
+             (94 . ".\\(?:\\(=\\)=?\\)")
+             (95 . ".\\(?:\\(|_\\|[_]\\)_?\\)")
+             (119 . ".\\(?:\\(ww\\)w?\\)")
+             (123 . ".\\(?:\\(|\\)[|}]?\\)")
+             (124 . ".\\(?:\\(->\\|=>\\||[-=>]\\||||*>\\|[]=>|}-]\\).?\\)")
+             (126 . ".\\(?:\\(~>\\|[-=>@~]\\)[-=>@~]?\\)"))))
+      (dolist (char-regexp alist)
+        (set-char-table-range composition-ligature-table (car char-regexp)
+                              `([,(cdr char-regexp) 0 font-shape-gstring]))))
+    (set-char-table-parent composition-ligature-table composition-function-table)))
+#+END_SRC
+* C++ style
+#+BEGIN_SRC emacs-lisp
+(svarog/defhook c-mode-common-configuration () c-mode-common-hook
+                "Common conf for C mode."
+                (c-set-style "bsd")
+                (setq c-basic-offset 2
+                      tab-width 2
+                      indent-tabs-mode nil
+                      c-tab-always-indent t
+                      c-echo-syntactic-information-p t)
+                (define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
+
+                (auto-revert-mode t)
+                (blackout 'auto-revert-mode)
+                (toggle-truncate-lines t))
+
+(svarog/defhook c++-mode-configuration () c++-mode-hook
+                "Custom C++ indent config."
+                (add-to-list 'c-offsets-alist '(innamespace . 0))
+                (c-set-offset 'substatement-open 0)
+                (c-set-offset 'label '+))
+#+END_SRC
+
+* Local config
+#+BEGIN_SRC emacs-lisp
+(use-package org-install)
+(use-package ob-tangle)
+
+(setq svarog//local-config-file (expand-file-name "config_local.org" (expand-file-name doom-private-dir)))
+(when (file-exists-p svarog//local-config-file)
+  (org-babel-load-file svarog//local-config-file))
+#+END_SRC
