@@ -67,9 +67,14 @@ This will open documentation for it, including demos of how they are used.
 
 You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 they are implemented.
+
+** evil-snipe config
+#+BEGIN_SRC emacs-lisp
+(setq evil-snipe-scope 'visible)
 #+END_SRC
 
-#+begin_src emacs-lisp
+** svarog/defhook
+#+BEGIN_SRC emacs-lisp
 (defmacro svarog/defhook (name arglist hooks docstring &rest body)
   "Define a function called NAME and add it to a hook.
 ARGLIST is as in `defun'. HOOKS is a list of hooks to which to
@@ -94,7 +99,7 @@ as in `defun'."
          ,@body)
        (dolist (hook ',hooks)
          (add-hook hook ',name)))))
-#+end_src
+#+END_SRC
 
 * clang-format
 
@@ -196,14 +201,21 @@ as in `defun'."
                 (define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
 
                 (auto-revert-mode t)
-                (blackout 'auto-revert-mode)
-                (toggle-truncate-lines t))
+                ;; (blackout 'auto-revert-mode)
+                (toggle-truncate-lines t)
+                (require 'ccls)
+                (lsp))
 
 (svarog/defhook c++-mode-configuration () c++-mode-hook
                 "Custom C++ indent config."
                 (add-to-list 'c-offsets-alist '(innamespace . 0))
                 (c-set-offset 'substatement-open 0)
                 (c-set-offset 'label '+))
+
+;; (svarog/defhook cpp-lsp-configuration () (c-mode-hook c++-mode-hook)
+;;                 "Enabling lsp config."
+;;                 (require 'ccls)
+;;                 (lsp))
 #+END_SRC
 
 * Local config
