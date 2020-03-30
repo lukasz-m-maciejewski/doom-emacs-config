@@ -67,7 +67,11 @@ This will open documentation for it, including demos of how they are used.
 
 You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 they are implemented.
-
+** very basic editor config
+#+BEGIN_SRC emacs-lisp
+(setq tab-width 2
+      make-backup-files nil)
+#+END_SRC
 ** evil-snipe config
 #+BEGIN_SRC emacs-lisp
 (setq evil-snipe-scope 'visible)
