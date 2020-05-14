@@ -222,6 +222,11 @@ as in `defun'."
 ;;                 (require 'ccls)
 ;;                 (lsp))
 #+END_SRC
+* Key bindings customization
+** disable 'emacs mode'
+#+BEGIN_SRC emacs-lisp
+(global-unset-key (kbd "C-z"))
+#+END_SRC
 
 * Local config
 #+BEGIN_SRC emacs-lisp
