@@ -222,10 +222,16 @@ as in `defun'."
 ;;                 (require 'ccls)
 ;;                 (lsp))
 #+END_SRC
+
 * Key bindings customization
 ** disable 'emacs mode'
 #+BEGIN_SRC emacs-lisp
 (global-unset-key (kbd "C-z"))
+#+END_SRC
+
+* plantuml
+#+BEGIN_SRC emacs-lisp
+(setq plantuml-default-exec-mode 'jar)
 #+END_SRC
 
 * Local config
