@@ -1,0 +1,66 @@
+diff --git a/modules/editor/file-templates/templates/c++-mode/__cpp b/modules/editor/file-templates/templates/c++-mode/__cpp
+deleted file mode 100644
+index 10f8293e1..000000000
+--- a/modules/editor/file-templates/templates/c++-mode/__cpp
++++ /dev/null
+@@ -1,7 +0,0 @@
+-# -*- mode: snippet -*-
+-# group: file templates
+-# contributor: Henrik Lissner
+-# --
+-#include "`(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`.h"
+-
+-$0
+diff --git a/modules/editor/file-templates/templates/c++-mode/__hpp b/modules/editor/file-templates/templates/c++-mode/__hpp
+deleted file mode 100644
+index c38ae152c..000000000
+--- a/modules/editor/file-templates/templates/c++-mode/__hpp
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# -*- mode: snippet -*-
+-# group: file templates
+-# contributor: Henrik Lissner
+-# --
+-#ifndef ${1:__`(upcase (file-name-base buffer-file-name))`_H_$(upcase yas-text)}
+-#define $1
+-
+-$0
+-
+-#endif // $1
+diff --git a/modules/editor/file-templates/templates/c++-mode/__main.cpp b/modules/editor/file-templates/templates/c++-mode/__main.cpp
+deleted file mode 100644
+index b4a1557a8..000000000
+--- a/modules/editor/file-templates/templates/c++-mode/__main.cpp
++++ /dev/null
+@@ -1,13 +0,0 @@
+-# -*- mode: snippet -*-
+-# group: file templates
+-# contributor: Henrik Lissner
+-# --
+-#include <iostream>
+-
+-using namespace std;
+-
+-int main(int argc, char *argv[]) {
+-    $0
+-
+-    return 0;
+-}
+diff --git a/modules/editor/file-templates/templates/c++-mode/__winmain.cpp b/modules/editor/file-templates/templates/c++-mode/__winmain.cpp
+deleted file mode 100644
+index 67947be3b..000000000
+--- a/modules/editor/file-templates/templates/c++-mode/__winmain.cpp
++++ /dev/null
+@@ -1,12 +0,0 @@
+-# -*- mode: snippet -*-
+-# group: file templates
+-# contributor: Henrik Lissner
+-# --
+-#include <Windows.h>
+-
+-int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+-{
+-    $0
+-
+-    return 0;
+-}
