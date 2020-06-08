@@ -234,6 +234,20 @@ as in `defun'."
 (setq plantuml-default-exec-mode 'jar)
 #+END_SRC
 
+** Rebinding clipboard interaction
+#+BEGIN_SRC emacs-lisp
+(bind-keys
+ ("s-x" . clipboard-kill-region)
+ ("s-c" . clipboard-kill-ring-save)
+ ("s-v" . clipboard-yank)
+ )
+#+END_SRC
+* Disable symlink resolution
+#+BEGIN_SRC emacs-lisp
+(setq find-file-visit-truename nil
+      vc-follow-symlinks nil)
+#+END_SRC
+
 * Local config
 #+BEGIN_SRC emacs-lisp
 (use-package org-install)

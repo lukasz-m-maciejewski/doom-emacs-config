@@ -53,3 +53,5 @@
 (package! clang-format)
 (package! bazel-mode)
 (package! protobuf-mode)
+
+(package! elisp-format)
