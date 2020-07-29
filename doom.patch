@@ -64,3 +64,35 @@ index 67947be3b..000000000
 -
 -    return 0;
 -}
+diff --git a/modules/lang/org/config.el b/modules/lang/org/config.el
+index acd05aa29..b46923c9f 100644
+--- a/modules/lang/org/config.el
++++ b/modules/lang/org/config.el
+@@ -141,18 +141,18 @@ This forces it to read the background before rendering."
+         '((sequence
+            "TODO(t)"  ; A task that needs doing & is ready to do
+            "PROJ(p)"  ; A project, which usually contains other tasks
+-           "STRT(s)"  ; A task that is in progress
+-           "WAIT(w)"  ; Something external is holding up this task
+-           "HOLD(h)"  ; This task is paused/on hold because of me
++           "STRT(s@)"  ; A task that is in progress
++           "WAIT(w!)"  ; Something external is holding up this task
++           "HOLD(h@)"  ; This task is paused/on hold because of me
+            "|"
+-           "DONE(d)"  ; Task successfully completed
+-           "KILL(k)") ; Task was cancelled, aborted or is no longer applicable
++           "DONE(d@)"  ; Task successfully completed
++           "KILL(k@)") ; Task was cancelled, aborted or is no longer applicable
+           (sequence
+-           "[ ](T)"   ; A task that needs doing
+-           "[-](S)"   ; Task is in progress
+-           "[?](W)"   ; Task is being held up or paused
++           "[ ](T!)"   ; A task that needs doing
++           "[-](S!)"   ; Task is in progress
++           "[?](W!)"   ; Task is being held up or paused
+            "|"
+-           "[X](D)")) ; Task was completed
++           "[X](D!)")) ; Task was completed
+         org-todo-keyword-faces
+         '(("[-]"  . +org-todo-active)
+           ("STRT" . +org-todo-active)
