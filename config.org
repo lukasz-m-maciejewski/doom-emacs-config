@@ -250,3 +250,8 @@ as in `defun'."
 (when (file-exists-p svarog//local-config-file)
   (org-babel-load-file svarog//local-config-file))
 #+END_SRC
+
+* Rust
+#+BEGIN_SRC elisp
+(setq rustic-lsp-server 'rust-analyzer)
+#+END_SRC
