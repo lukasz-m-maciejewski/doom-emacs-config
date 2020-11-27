@@ -178,6 +178,15 @@ as in `defun'."
                 (c-set-offset 'label '+))
 #+END_SRC
 
+* c++ templates
+#+begin_src emacs-lisp
+(set-file-template! "/main\\.c\\(?:c\\|pp\\)$" :ignore t)
+(set-file-template! "\\.c\\(?:c\\|pp\\)$" :ignore t)
+(set-file-template! "\\.h\\(?:h\\|pp\\|xx\\)$" :ignore t)
+(set-file-template! "\\.h$" :ignore t)
+(set-file-template! 'c-mode :ignore t)
+#+end_src
+
 * Key bindings customization
 ** disable 'emacs mode'
 #+BEGIN_SRC emacs-lisp
