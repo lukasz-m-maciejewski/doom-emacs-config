@@ -108,10 +108,18 @@ as in `defun'."
 * clang-format
 
 #+begin_src emacs-lisp
+;; (use-package clang-format
+;;   :bind (:map c++-mode-map
+;;          ("C-c f"   . clang-format-buffer)
+;;          ("C-c C-f" . clang-format-buffer)))
 (use-package clang-format
-  :bind (:map c++-mode-map
-         ("C-c f"   . clang-format-buffer)
-         ("C-c C-f" . clang-format-buffer)))
+:commands (clang-format-buffer clang-format-region
+))
+
+(map! ;; this is a doom macro, not sure if appropriate for your case
+:map c++-mode-map
+"C-c f" #'clang-format-buffer
+"C-c C-f" #'clang-format-buffer)
 #+end_src
 
 * Bazel
@@ -144,55 +152,9 @@ as in `defun'."
 * lsp config
 #+BEGIN_SRC emacs-lisp
 ;; (setq lsp-enable-file-watchers nil)
-;;(setq lsp-file-watch-threshold 150000)
+(setq lsp-file-watch-threshold 100000)
 #+END_SRC
 
-* ligatures
-#+BEGIN_SRC emacs-lisp
-;; (use-package composite
-;;   :init
-;;   (defvar composition-ligature-table (make-char-table nil))
-;;   :hook
-;;   (((prog-mode conf-mode nxml-mode markdown-mode help-mode)
-;;     . (lambda () (setq-local composition-function-table composition-ligature-table))))
-;;     :config
-;;   ;; support ligatures, some toned down to prevent hang
-;;   (when (version<= "27.0" emacs-version)
-;;     (let ((alist
-;;            '((33 . ".\\(?:\\(==\\|[!=]\\)[!=]?\\)")
-;;              (35 . ".\\(?:\\(###?\\|_(\\|[(:=?[_{]\\)[#(:=?[_{]?\\)")
-;;              (36 . ".\\(?:\\(>\\)>?\\)")
-;;              (37 . ".\\(?:\\(%\\)%?\\)")
-;;              (38 . ".\\(?:\\(&\\)&?\\)")
-;;              (42 . ".\\(?:\\(\\*\\*\\|[*>]\\)[*>]?\\)")
-;;              ;; (42 . ".\\(?:\\(\\*\\*\\|[*/>]\\).?\\)")
-;;              (43 . ".\\(?:\\([>]\\)>?\\)")
-;;              ;; (43 . ".\\(?:\\(\\+\\+\\|[+>]\\).?\\)")
-;;              (45 . ".\\(?:\\(-[->]\\|<<\\|>>\\|[-<>|~]\\)[-<>|~]?\\)")
-;;              ;; (46 . ".\\(?:\\(\\.[.<]\\|[-.=]\\)[-.<=]?\\)")
-;;              (46 . ".\\(?:\\(\\.<\\|[-=]\\)[-<=]?\\)")
-;;              (47 . ".\\(?:\\(//\\|==\\|[=>]\\)[/=>]?\\)")
-;;              ;; (47 . ".\\(?:\\(//\\|==\\|[*/=>]\\).?\\)")
-;;              (48 . ".\\(?:\\(x[a-fA-F0-9]\\).?\\)")
-;;              (58 . ".\\(?:\\(::\\|[:<=>]\\)[:<=>]?\\)")
-;;              (59 . ".\\(?:\\(;\\);?\\)")
-;;              (60 . ".\\(?:\\(!--\\|\\$>\\|\\*>\\|\\+>\\|-[-<>|]\\|/>\\|<[-<=]\\|=[<>|]\\|==>?\\||>\\||||?\\|~[>~]\\|[$*+/:<=>|~-]\\)[$*+/:<=>|~-]?\\)")
-;;              (61 . ".\\(?:\\(!=\\|/=\\|:=\\|<<\\|=[=>]\\|>>\\|[=>]\\)[=<>]?\\)")
-;;              (62 . ".\\(?:\\(->\\|=>\\|>[-=>]\\|[-:=>]\\)[-:=>]?\\)")
-;;              (63 . ".\\(?:\\([.:=?]\\)[.:=?]?\\)")
-;;              (91 . ".\\(?:\\(|\\)[]|]?\\)")
-;;              ;; (92 . ".\\(?:\\([\\n]\\)[\\]?\\)")
-;;              (94 . ".\\(?:\\(=\\)=?\\)")
-;;              (95 . ".\\(?:\\(|_\\|[_]\\)_?\\)")
-;;              (119 . ".\\(?:\\(ww\\)w?\\)")
-;;              (123 . ".\\(?:\\(|\\)[|}]?\\)")
-;;              (124 . ".\\(?:\\(->\\|=>\\||[-=>]\\||||*>\\|[]=>|}-]\\).?\\)")
-;;              (126 . ".\\(?:\\(~>\\|[-=>@~]\\)[-=>@~]?\\)"))))
-;;       (dolist (char-regexp alist)
-;;         (set-char-table-range composition-ligature-table (car char-regexp)
-;;                               `([,(cdr char-regexp) 0 font-shape-gstring]))))
-;;     (set-char-table-parent composition-ligature-table composition-function-table)))
-#+END_SRC
 * C++ style
 #+BEGIN_SRC emacs-lisp
 (svarog/defhook c-mode-common-configuration () c-mode-common-hook
@@ -227,7 +189,7 @@ as in `defun'."
 (setq plantuml-default-exec-mode 'jar)
 #+END_SRC
 
-** Rebinding clipboard interaction
+* Rebinding clipboard interaction
 #+BEGIN_SRC emacs-lisp
 (bind-keys
  ("s-x" . clipboard-kill-region)
