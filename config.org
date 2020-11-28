@@ -108,23 +108,18 @@ as in `defun'."
 * clang-format
 
 #+begin_src emacs-lisp
-;; (use-package clang-format
-;;   :bind (:map c++-mode-map
-;;          ("C-c f"   . clang-format-buffer)
-;;          ("C-c C-f" . clang-format-buffer)))
-(use-package clang-format
-:commands (clang-format-buffer clang-format-region
-))
-
-(map! ;; this is a doom macro, not sure if appropriate for your case
-:map c++-mode-map
-"C-c f" #'clang-format-buffer
-"C-c C-f" #'clang-format-buffer)
+(use-package! clang-format
+  :init
+  (map! ;; this is a doom macro, not sure if appropriate for your case
+   :map c++-mode-map
+   "C-c f" #'clang-format-buffer
+   "C-c C-f" #'clang-format-buffer)
+  :commands (clang-format-buffer clang-format-region))
 #+end_src
 
 * Bazel
 #+begin_src emacs-lisp
-(use-package bazel-mode
+(use-package! bazel-mode
   :demand t
   :config
   (add-to-list 'auto-mode-alist '("/BUILD\\(\\..*\\)?\\'" . bazel-mode))
@@ -139,7 +134,7 @@ as in `defun'."
   '((c-basic-offset . 4)
     (indent-tabs-mode . nil)))
 
-(use-package protobuf-mode
+(use-package! protobuf-mode
   :config
   (svarog/defhook svarog/set-proto-style () protobuf-mode-hook "Set protobuf style."
                   (c-add-style "local-protobuf-style" local-protobuf-style t)))
@@ -214,8 +209,8 @@ as in `defun'."
 
 * Local config
 #+BEGIN_SRC emacs-lisp
-(use-package org-install)
-(use-package ob-tangle)
+(use-package! org-install)
+(use-package! ob-tangle)
 
 (setq svarog//local-config-file (expand-file-name "config_local.org" (expand-file-name doom-private-dir)))
 (when (file-exists-p svarog//local-config-file)
