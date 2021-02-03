@@ -35,7 +35,7 @@ available. You can either set `doom-theme' or manually load a theme with the
 `load-theme' function. This is the default:
 
 #+BEGIN_SRC emacs-lisp
-(setq doom-theme 'doom-solarized-dark)
+(setq doom-theme 'doom-gruvbox)
 (setq doom-solarized-dark-make-constants-blue 't)
 #+END_SRC
 
