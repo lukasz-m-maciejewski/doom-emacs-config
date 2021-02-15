@@ -147,8 +147,8 @@ as in `defun'."
 #+end_src
 * lsp config
 #+BEGIN_SRC emacs-lisp
-;; (setq lsp-enable-file-watchers nil)
-(setq lsp-file-watch-threshold 100000)
+(setq lsp-enable-file-watchers nil)
+;; (setq lsp-file-watch-threshold 100000)
 #+END_SRC
 
 * C++ style
