@@ -51,7 +51,7 @@
 ;(package! builtin-package :recipe (:branch "develop"))
 
 (package! clang-format)
-(package! bazel-mode)
+(package! bazel)
 (package! protobuf-mode)
 
 (package! elisp-format)

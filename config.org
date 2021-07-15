@@ -120,7 +120,7 @@ as in `defun'."
 
 * Bazel
 #+begin_src emacs-lisp
-(use-package! bazel-mode
+(use-package! bazel
   :demand t
   :config
   (add-to-list 'auto-mode-alist '("/BUILD\\(\\..*\\)?\\'" . bazel-mode))
