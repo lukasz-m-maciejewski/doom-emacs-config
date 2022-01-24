@@ -55,3 +55,5 @@
 (package! protobuf-mode)
 
 (package! elisp-format)
+
+(package! groovy-mode)

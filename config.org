@@ -27,7 +27,7 @@ They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 font string. You generally only need these two:
 
 #+BEGIN_SRC emacs-lisp
-(setq doom-font (font-spec :family "Iosevka Term" :size 16))
+(setq doom-font (font-spec :family "Iosevka Term" :size 14))
 #+END_SRC
 
 There are two ways to load a theme. Both assume the theme is installed and
@@ -36,7 +36,6 @@ available. You can either set `doom-theme' or manually load a theme with the
 
 #+BEGIN_SRC emacs-lisp
 (setq doom-theme 'doom-gruvbox)
-(setq doom-solarized-dark-make-constants-blue 't)
 #+END_SRC
 
 If you use `org' and don't want your org files in the default location below,
@@ -126,8 +125,7 @@ as in `defun'."
   (add-to-list 'auto-mode-alist '("/BUILD\\(\\..*\\)?\\'" . bazel-mode))
   (add-to-list 'auto-mode-alist '("/WORKSPACE\\'" . bazel-mode))
   (add-to-list 'auto-mode-alist '("\\.\\(BUILD\\|WORKSPACE\\|bzl\\)\\'" . bazel-mode))
-  (svarog/defhook autoformat-on-save () bazel-mode-hook "Autoformat on save."
-                  (add-hook 'before-save-hook #'bazel-format nil t)))
+  (setq bazel-buildifier-before-save 't))
 #+END_SRC
 * Protobuf
 #+BEGIN_SRC emacs-lisp
@@ -148,6 +146,7 @@ as in `defun'."
 * lsp config
 #+BEGIN_SRC emacs-lisp
 (setq lsp-enable-file-watchers nil)
+(setq lsp-ui-doc-enable nil)
 ;; (setq lsp-file-watch-threshold 100000)
 #+END_SRC
 
@@ -219,6 +218,37 @@ as in `defun'."
 #+END_SRC
 
 * Rust
-#+BEGIN_SRC elisp
+#+BEGIN_SRC emacs-lisp
 (setq rustic-lsp-server 'rust-analyzer)
 #+END_SRC
+
+* Makefiles
+#+begin_src emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.mak\\'" . makefile-mode))
+
+#+end_src
+
+* Window navigation
+#+begin_src emacs-lisp
+(map! :map evil-window-map
+      "SPC" #'rotate-layout
+      ;; Navigation
+      "<left>"     #'evil-window-left
+      "<down>"     #'evil-window-down
+      "<up>"       #'evil-window-up
+      "<right>"    #'evil-window-right
+      ;; Swapping windows
+      "C-<left>"       #'+evil/window-move-left
+      "C-<down>"       #'+evil/window-move-down
+      "C-<up>"         #'+evil/window-move-up
+      "C-<right>"      #'+evil/window-move-right)
+#+end_src
+
+* Groovy
+#+begin_src emacs-lisp
+(use-package! groovy-mode
+  :demand t
+  :config
+  (add-to-list 'auto-mode-alist '("/Jenkinsfile\\'" . bazel-mode)))
+
+#+end_src
