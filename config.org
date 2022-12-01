@@ -152,6 +152,8 @@ as in `defun'."
 
 * C++ style
 #+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+
 (svarog/defhook c-mode-common-configuration () c-mode-common-hook
                 "Common conf for C mode."
                 (c-set-style "bsd")
